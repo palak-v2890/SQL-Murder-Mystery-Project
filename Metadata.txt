@@ -1,0 +1,101 @@
+## 🗂️ Metadata & Data Dictionary  
+
+### 📊 Data Source  
+The dataset is a **synthetic, structured relational database** designed to simulate an internal investigation system within a corporate environment (**Tech Nova Inc.**).  
+
+It represents real-world enterprise data sources such as:
+- Employee master data  
+- Access control systems (keycard logs)  
+- Communication logs  
+- Self-reported alibi statements  
+- Crime scene evidence records  
+
+The data is intentionally designed to enable **multi-table analysis, anomaly detection, and investigative querying using SQL**.
+
+---
+
+## 📁 Table Structure & Definitions  
+
+### 👤 1. Employees Table  
+Stores basic employee information and organizational details.
+
+| Column Name   | Data Type   | Description |
+|--------------|------------|-------------|
+| employee_id  | INT (PK)   | Unique identifier for each employee |
+| name         | VARCHAR    | Full name of the employee |
+| department   | VARCHAR    | Department the employee belongs to |
+| role         | VARCHAR    | Job title of the employee |
+
+---
+
+### 🔑 2. Keycard Logs Table  
+Tracks employee movement across different locations using access card swipes.
+
+| Column Name   | Data Type   | Description |
+|--------------|------------|-------------|
+| log_id       | INT (PK)   | Unique identifier for each log entry |
+| employee_id  | INT (FK)   | References the employee accessing a location |
+| room         | VARCHAR    | Name of the room accessed |
+| entry_time   | TIMESTAMP  | Time when the employee entered the room |
+| exit_time    | TIMESTAMP  | Time when the employee exited the room |
+
+---
+
+### 📞 3. Calls Table  
+Captures communication between employees.
+
+| Column Name   | Data Type   | Description |
+|--------------|------------|-------------|
+| call_id      | INT (PK)   | Unique identifier for each call |
+| caller_id    | INT (FK)   | Employee initiating the call |
+| receiver_id  | INT (FK)   | Employee receiving the call |
+| call_time    | TIMESTAMP  | Timestamp when the call occurred |
+| duration_sec | INT        | Duration of the call in seconds |
+
+---
+
+### 🧾 4. Alibis Table  
+Stores employee-stated locations at a specific time for verification purposes.
+
+| Column Name       | Data Type   | Description |
+|------------------|------------|-------------|
+| alibi_id         | INT (PK)   | Unique identifier for each alibi record |
+| employee_id      | INT (FK)   | Employee providing the alibi |
+| claimed_location | VARCHAR    | Location claimed by the employee |
+| claim_time       | TIMESTAMP  | Time associated with the alibi |
+
+---
+
+### 🔍 5. Evidence Table  
+Contains findings collected from the crime scene and related locations.
+
+| Column Name   | Data Type   | Description |
+|--------------|------------|-------------|
+| evidence_id  | INT (PK)   | Unique identifier for each evidence record |
+| room         | VARCHAR    | Location where the evidence was found |
+| description  | VARCHAR    | Description of the evidence |
+| found_time   | TIMESTAMP  | Time when the evidence was discovered |
+
+---
+
+## 🔗 Relationships Between Tables  
+
+- `employees.employee_id` → referenced by:
+  - `keycard_logs.employee_id`
+  - `calls.caller_id`
+  - `calls.receiver_id`
+  - `alibis.employee_id`
+
+- The dataset is designed to support:
+  - **Behavior tracking (keycard_logs)**  
+  - **Communication analysis (calls)**  
+  - **Truth validation (alibis vs logs)**  
+  - **Evidence correlation (evidence + movement data)**  
+
+---
+
+## 🧠 Data Design Insight  
+This schema mimics a real-world investigative system where:
+- Multiple data sources must be combined  
+- No single table provides the full picture  
+- Insights emerge through **joins, filtering, and cross-referencing**  
